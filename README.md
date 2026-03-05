@@ -1,109 +1,167 @@
-# Synthese
+# Synthese: AI-Powered Knowledge Base
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+A personalized knowledge base app that helps users organize unstructured notes using AI. Whether you're studying, reading, watching TV, or brainstorming, Synthese helps you capture raw thoughts and transform them into organized, retrievable knowledge.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+---
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/js?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+## 🎯 Core Features
 
-## Generate a library
+### Raw Input
+Quickly dump unstructured thoughts into the app without worrying about organization. Just type freely—no formatting required.
 
-```sh
-npx nx g @nx/js:lib packages/pkg1 --publishable --importPath=@my-org/pkg1
-```
+### AI Organization
+Click the "Organize" button to let our local AI agent analyze and structure your thoughts intelligently. The AI understands context and relationships between ideas.
 
-## Run tasks
+### Interactive Clarification
+The AI proactively asks clarifying questions during the organization process. Answer these questions to help the AI better understand and structure ambiguous ideas before finalizing the content.
 
-To build the library use:
+### Topic Organization
+Organize your notes by topics. Create new topics as needed, and add related notes to existing topics. Build your knowledge base by categorizing and grouping information in a way that makes sense for your learning.
 
-```sh
-npx nx build pkg1
-```
+### Conversational Learning
+Once organized, chat seamlessly with the AI about your stored topics. Use it to study, retrieve knowledge, explore connections, or dig deeper into what you've learned.
 
-To run any task with Nx use:
+---
 
-```sh
-npx nx <target> <project-name>
-```
-
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Versioning and releasing
-
-To version and release the library use
+## 📋 User Flow
 
 ```
-npx nx release
+1. Write → Drop unstructured thoughts into the text area
+2. Organize → Click "Organize" button
+3. Clarify → Answer AI's clarifying questions  
+4. Assign Topic → Choose an existing topic or create a new one
+5. Learn → Chat with AI about your organized topics
 ```
 
-Pass `--dry-run` to see what would happen without actually releasing the library.
+---
 
-[Learn more about Nx release &raquo;](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 🛠️ Tech Stack
 
-## Keep TypeScript project references up to date
+**Frontend:**
+- Angular 21
+- TypeScript 5.9
+- Playwright (E2E Testing)
 
-Nx automatically updates TypeScript [project references](https://www.typescriptlang.org/docs/handbook/project-references.html) in `tsconfig.json` files to ensure they remain accurate based on your project dependencies (`import` or `require` statements). This sync is automatically done when running tasks such as `build` or `typecheck`, which require updated references to function correctly.
+**Backend:**
+- NestJS 11
+- Node.js
+- TypeScript 5.9
 
-To manually trigger the process to sync the project graph dependencies information to the TypeScript project references, run the following command:
+**Development:**
+- Nx 22.5.3 (Monorepo Management)
+- Jest 30 (Unit Testing)
+- ESLint 9 (Linting)
+- Prettier 3.6 (Code Formatting)
 
-```sh
-npx nx sync
+**DevOps:**
+- Docker Compose (Development environment)
+- pnpm (Package Management)
+
+---
+
+## 📁 Project Structure
+
+```
+synthese/
+├── apps/
+│   ├── api/              # NestJS backend
+│   ├── api-e2e/          # API end-to-end tests
+│   ├── web/              # Angular frontend
+│   └── web-e2e/          # Web end-to-end tests
+├── libs/                 # Shared libraries
+├── docker-compose.yml    # Local development environment
+├── nx.json              # Nx configuration
+├── package.json         # Root dependencies
+└── pnpm-workspace.yaml  # pnpm workspace config
 ```
 
-You can enforce that the TypeScript project references are always in the correct state when running in CI by adding a step to your CI job configuration that runs the following command:
+---
 
-```sh
-npx nx sync:check
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 20+
+- pnpm
+- Docker & Docker Compose (optional, for containerized development)
+
+### Installation
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start development servers
+pnpm dev
+
+# Or with Docker Compose
+docker-compose up
 ```
 
-[Learn more about nx sync](https://nx.dev/reference/nx-commands#sync)
+### Running Specific Apps
 
-## Set up CI!
+```bash
+# Start the API
+pnpm nx serve api
 
-### Step 1
+# Start the Web app
+pnpm nx serve web
 
-To connect to Nx Cloud, run the following command:
+# Run API E2E tests
+pnpm nx e2e api-e2e
 
-```sh
-npx nx connect
+# Run Web E2E tests
+pnpm nx e2e web-e2e
+
+# Run unit tests
+pnpm nx test api
+pnpm nx test web
 ```
 
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+---
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 📝 Development
 
-### Step 2
+### Code Quality
 
-Use the following command to configure a CI workflow for your workspace:
+```bash
+# Run linter
+pnpm nx lint api
 
-```sh
-npx nx g ci-workflow
+# Format code
+pnpm nx format:write
+
+# Type checking
+pnpm nx typecheck api
 ```
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Building for Production
 
-## Install Nx Console
+```bash
+# Build all apps
+pnpm nx build
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+# Build specific app
+pnpm nx build api
+pnpm nx build web
+```
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+---
 
-## Useful links
+## 🔄 Key Architectural Principles
 
-Learn more:
+1. **Topic-Based Organization**: Users add organized notes to topics they create, building a personalized categorized knowledge base
+2. **AI-Assisted Structuring**: The AI helps format raw thoughts into clear, structured notes
+3. **User Control**: Users guide the AI through clarifying questions and decide how to organize their knowledge
+4. **Local Processing**: AI processing prioritizes privacy by using local agents where possible
 
-- [Learn more about this workspace setup](https://nx.dev/nx-api/js?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+---
 
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 📄 License
+
+MIT
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! ❤️
