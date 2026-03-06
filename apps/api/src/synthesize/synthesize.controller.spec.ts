@@ -5,7 +5,6 @@ import { RAW_TEXT_REPOSITORY } from '@synthese/domain';
 
 describe('SynthesizeController', () => {
   let controller: SynthesizeController;
-  let service: SynthesizeService;
 
   const mockRawTextRepository = {
     create: jest.fn(),
@@ -24,7 +23,6 @@ describe('SynthesizeController', () => {
     }).compile();
 
     controller = module.get<SynthesizeController>(SynthesizeController);
-    service = module.get<SynthesizeService>(SynthesizeService);
   });
 
   afterEach(() => {
