@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Topic {
+  id        Int       @id @default(autoincrement())
+  name      String
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  rawTexts  RawText[]
+
+  @@map("topics")
+}
+
+model RawText {
+  id        Int      @id @default(autoincrement())
+  content   String
+  topicId   Int      @map("topic_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  topic     Topic    @relation(fields: [topicId], references: [id])
+
+  @@map("raw_texts")
+}

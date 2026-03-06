@@ -1,0 +1,11 @@
+{
+  "name": "@synthese/domain",
+  "version": "0.0.1",
+  "private": true,
+  "exports": {
+    ".": {
+      "@synthese/source": "./src/index.ts",
+      "default": "./dist/src/index.js"
+    }
+  }
+}

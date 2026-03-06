@@ -4,6 +4,14 @@
   "license": "MIT",
   "scripts": {},
   "private": true,
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@nestjs/core",
+      "@prisma/client",
+      "@prisma/engines",
+      "prisma"
+    ]
+  },
   "devDependencies": {
     "@angular-devkit/core": "~21.1.0",
     "@angular-devkit/schematics": "~21.1.0",
@@ -44,6 +52,7 @@
     "jsdom": "^27.1.0",
     "nx": "22.5.3",
     "prettier": "~3.6.2",
+    "prisma": "^6.9.0",
     "ts-jest": "^29.4.0",
     "ts-node": "10.9.1",
     "tslib": "^2.3.0",
@@ -61,8 +70,13 @@
     "@angular/router": "~21.1.0",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
+    "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.0",
+    "@nestjs/swagger": "^11.2.6",
+    "@prisma/client": "^6.9.0",
     "axios": "^1.6.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0"
   }
