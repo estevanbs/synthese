@@ -3,6 +3,7 @@
     [topics]="topics()"
     [selectedTopicId]="selectedTopic()?.id ?? null"
     (topicSelected)="selectTopic($event)"
+    (topicDeleted)="deleteTopic($event)"
     (newNoteRequested)="openEditor()"
   />
 

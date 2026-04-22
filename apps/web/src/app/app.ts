@@ -40,6 +40,18 @@ export class App implements OnInit {
     this.showEditor.set(true);
   }
 
+  deleteTopic(topic: Topic): void {
+    this.topicsService.delete(topic.id).subscribe({
+      next: () => {
+        this.topics.update((all) => all.filter((t) => t.id !== topic.id));
+        if (this.selectedTopic()?.id === topic.id) {
+          this.selectedTopic.set(null);
+          this.showEditor.set(true);
+        }
+      },
+    });
+  }
+
   onNotesSaved(result: SynthesizeResult): void {
     this.loadTopics();
     if (result.entries.length === 1) {

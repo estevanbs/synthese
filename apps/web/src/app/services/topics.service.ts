@@ -17,4 +17,8 @@ export class TopicsService {
   getAll(): Observable<Topic[]> {
     return this.http.get<Topic[]>(this.base);
   }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.base}/${id}`);
+  }
 }

@@ -25,4 +25,12 @@ export class PrismaTopicRepository implements TopicRepository {
       update: {},
     });
   }
+
+  async delete(id: number): Promise<void> {
+    await this.prisma.$transaction([
+      this.prisma.note.deleteMany({ where: { topicId: id } }),
+      this.prisma.rawText.deleteMany({ where: { topicId: id } }),
+      this.prisma.topic.delete({ where: { id } }),
+    ]);
+  }
 }

@@ -20,4 +20,8 @@ export class TopicService {
   async findById(id: number): Promise<Topic | null> {
     return this.topicRepository.findById(id);
   }
+
+  async delete(id: number): Promise<void> {
+    return this.topicRepository.delete(id);
+  }
 }

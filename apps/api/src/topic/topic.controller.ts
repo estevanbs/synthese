@@ -2,6 +2,7 @@ import {
   Controller,
   Post,
   Get,
+  Delete,
   Body,
   Param,
   ParseIntPipe,
@@ -38,5 +39,13 @@ export class TopicController {
   @ApiResponse({ status: 200, description: 'Topic found' })
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return this.topicService.findById(id);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Delete a topic and all its notes' })
+  @ApiResponse({ status: 204, description: 'Topic deleted' })
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.topicService.delete(id);
   }
 }

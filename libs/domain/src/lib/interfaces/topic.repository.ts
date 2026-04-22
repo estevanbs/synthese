@@ -5,4 +5,5 @@ export interface TopicRepository {
   findById(id: number): Promise<Topic | null>;
   findAll(): Promise<Topic[]>;
   findOrCreate(name: string): Promise<Topic>;
+  delete(id: number): Promise<void>;
 }
