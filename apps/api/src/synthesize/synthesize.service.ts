@@ -1,22 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
-import type {
-  TopicRepository,
-  NoteRepository,
-  AiProcessor,
-} from '@synthese/domain';
-import {
-  TOPIC_REPOSITORY,
-  NOTE_REPOSITORY,
-  AI_PROCESSOR,
-} from '@synthese/domain';
-
-export interface SynthesizeResult {
-  entries: Array<{
-    topicId: number;
-    topicName: string;
-    confirmation: string;
-  }>;
-}
+import type { TopicRepository, NoteRepository, AiProcessor } from '@synthese/domain';
+import { TOPIC_REPOSITORY, NOTE_REPOSITORY, AI_PROCESSOR } from '@synthese/domain';
+import type { SynthesizeResult } from './dto/synthesize-result.dto.js';
 
 @Injectable()
 export class SynthesizeService {

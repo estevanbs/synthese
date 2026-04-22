@@ -1,7 +1,8 @@
 import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { SynthesizeService, SynthesizeResult } from './synthesize.service.js';
+import { SynthesizeService } from './synthesize.service.js';
 import { SynthesizeDto } from './dto/synthesize.dto.js';
+import type { SynthesizeResult } from './dto/synthesize-result.dto.js';
 
 @ApiTags('Synthesize')
 @Controller('synthesize')

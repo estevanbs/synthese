@@ -48,3 +48,5 @@ test-output
 __screenshots__/
 
 .env
+
+.claude/
