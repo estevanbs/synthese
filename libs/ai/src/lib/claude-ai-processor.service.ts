@@ -28,7 +28,8 @@ Rules:
 - topicName must be the clean title only (e.g., "Abracadabra", not "Book: Abracadabra")
 - If the user mentions two different topics in one input, create two separate entries
 - If an existing note is provided, weave it into the new summary (older parts get briefer, new part gets full detail)
-- Write the summary in a helpful, neutral tone suitable for recall before the next reading/watching session
+- Write the summary in the same language the user used in their input. If the input is in Portuguese, write in Portuguese; if in English, write in English; and so on
+- Write in a helpful, neutral tone suitable for recall before the next reading/watching session
 - Never invent facts not present in the user's input or the existing note`;
 
 interface ClaudeEntry {
