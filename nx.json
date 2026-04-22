@@ -78,7 +78,6 @@
       "inputs": ["default", "^production"]
     }
   },
-  "nxCloudId": "69a63840b3c1600cf6cdc585",
   "generators": {
     "@nx/angular:application": {
       "e2eTestRunner": "playwright",
