@@ -1,167 +1,109 @@
 # Synthese: AI-Powered Knowledge Base
 
-A personalized knowledge base app that helps users organize unstructured notes using AI. Whether you're studying, reading, watching TV, or brainstorming, Synthese helps you capture raw thoughts and transform them into organized, retrievable knowledge.
+A personal knowledge base that captures unstructured notes and turns them into organized, cumulative summaries — per topic, in the language you wrote them.
 
 ---
 
-## 🎯 Core Features
+## How it works
 
-### Raw Input
-Quickly dump unstructured thoughts into the app without worrying about organization. Just type freely—no formatting required.
+1. **Write** — Dump free-form thoughts into the text area. No formatting needed.
+2. **Save** — Click "Save notes" (or Ctrl+Enter). Claude reads your input, identifies the topics mentioned, and generates a cumulative summary for each one.
+3. **Browse** — Topics appear in the sidebar. Click one to read its latest summary.
+4. **Repeat** — Each new save updates the summary: older content is condensed, new content gets full detail.
 
-### AI Organization
-Click the "Organize" button to let our local AI agent analyze and structure your thoughts intelligently. The AI understands context and relationships between ideas.
-
-### Interactive Clarification
-The AI proactively asks clarifying questions during the organization process. Answer these questions to help the AI better understand and structure ambiguous ideas before finalizing the content.
-
-### Topic Organization
-Organize your notes by topics. Create new topics as needed, and add related notes to existing topics. Build your knowledge base by categorizing and grouping information in a way that makes sense for your learning.
-
-### Conversational Learning
-Once organized, chat seamlessly with the AI about your stored topics. Use it to study, retrieve knowledge, explore connections, or dig deeper into what you've learned.
+Notes are always written in the language you use. Write in Portuguese, get Portuguese notes.
 
 ---
 
-## 📋 User Flow
+## Tech stack
 
-```
-1. Write → Drop unstructured thoughts into the text area
-2. Organize → Click "Organize" button
-3. Clarify → Answer AI's clarifying questions  
-4. Assign Topic → Choose an existing topic or create a new one
-5. Learn → Chat with AI about your organized topics
-```
+**Frontend:** Angular 21, TypeScript 5.9, Playwright (E2E)
 
----
+**Backend:** NestJS 11, TypeScript 5.9, Prisma 7 (PostgreSQL)
 
-## 🛠️ Tech Stack
+**AI:** Anthropic Claude via `@anthropic-ai/sdk`
 
-**Frontend:**
-- Angular 21
-- TypeScript 5.9
-- Playwright (E2E Testing)
-
-**Backend:**
-- NestJS 11
-- Node.js
-- TypeScript 5.9
-
-**Development:**
-- Nx 22.5.3 (Monorepo Management)
-- Jest 30 (Unit Testing)
-- ESLint 9 (Linting)
-- Prettier 3.6 (Code Formatting)
-
-**DevOps:**
-- Docker Compose (Development environment)
-- pnpm (Package Management)
+**Tooling:** Nx 22 monorepo, pnpm, Jest 30, ESLint 9, Docker Compose
 
 ---
 
-## 📁 Project Structure
-
-```
-synthese/
-├── apps/
-│   ├── api/              # NestJS backend
-│   ├── api-e2e/          # API end-to-end tests
-│   ├── web/              # Angular frontend
-│   └── web-e2e/          # Web end-to-end tests
-├── libs/                 # Shared libraries
-├── docker-compose.yml    # Local development environment
-├── nx.json              # Nx configuration
-├── package.json         # Root dependencies
-└── pnpm-workspace.yaml  # pnpm workspace config
-```
-
----
-
-## 🚀 Getting Started
+## Getting started
 
 ### Prerequisites
+
 - Node.js 20+
 - pnpm
-- Docker & Docker Compose (optional, for containerized development)
+- Docker (for PostgreSQL)
+- An Anthropic API key
 
-### Installation
+### Setup
 
 ```bash
 # Install dependencies
 pnpm install
 
-# Start development servers
-pnpm dev
+# Start PostgreSQL
+docker-compose up -d
 
-# Or with Docker Compose
-docker-compose up
-```
+# Run database migrations
+pnpm prisma migrate dev
 
-### Running Specific Apps
+# Set your API key
+export ANTHROPIC_API_KEY=sk-...
 
-```bash
-# Start the API
+# Start API (port 3000) and web (port 4200) in separate terminals
 pnpm nx serve api
-
-# Start the Web app
 pnpm nx serve web
-
-# Run API E2E tests
-pnpm nx e2e api-e2e
-
-# Run Web E2E tests
-pnpm nx e2e web-e2e
-
-# Run unit tests
-pnpm nx test api
-pnpm nx test web
 ```
+
+Swagger docs are available at `http://localhost:3000/docs`.
 
 ---
 
-## 📝 Development
+## Project structure
 
-### Code Quality
-
-```bash
-# Run linter
-pnpm nx lint api
-
-# Format code
-pnpm nx format:write
-
-# Type checking
-pnpm nx typecheck api
+```
+synthese/
+├── apps/
+│   ├── api/          # NestJS REST API
+│   ├── api-e2e/      # API integration tests (axios + live server)
+│   ├── web/          # Angular SPA
+│   └── web-e2e/      # Playwright browser tests
+└── libs/
+    ├── domain/       # Interfaces, entities, DI tokens — no framework deps
+    ├── database/     # Prisma repositories + generated client
+    └── ai/           # Claude AI processor implementation
 ```
 
-### Building for Production
+The dependency flow is strict: `apps/` → `libs/database` | `libs/ai` → `libs/domain`. Nothing in `libs/domain` imports from outer layers.
+
+---
+
+## Development commands
 
 ```bash
-# Build all apps
-pnpm nx build
+# Unit tests
+pnpm nx test api
+pnpm nx test ai
 
-# Build specific app
+# Single test file
+pnpm nx test api --testFile=src/synthesize/synthesize.service.spec.ts
+
+# E2E tests (requires running API + Postgres + ANTHROPIC_API_KEY for synthesize tests)
+pnpm nx e2e api-e2e
+
+# Lint / type-check / format
+pnpm nx lint api
+pnpm nx typecheck api
+pnpm nx format:write
+
+# Build
 pnpm nx build api
 pnpm nx build web
 ```
 
 ---
 
-## 🔄 Key Architectural Principles
-
-1. **Topic-Based Organization**: Users add organized notes to topics they create, building a personalized categorized knowledge base
-2. **AI-Assisted Structuring**: The AI helps format raw thoughts into clear, structured notes
-3. **User Control**: Users guide the AI through clarifying questions and decide how to organize their knowledge
-4. **Local Processing**: AI processing prioritizes privacy by using local agents where possible
-
----
-
-## 📄 License
+## License
 
 MIT
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! ❤️
