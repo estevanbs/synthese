@@ -1,7 +1,7 @@
 import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { SynthesizeService } from './synthesize.service.js';
-import { CreateRawTextDto } from './dto/create-raw-text.dto.js';
+import { SynthesizeService, SynthesizeResult } from './synthesize.service.js';
+import { SynthesizeDto } from './dto/synthesize.dto.js';
 
 @ApiTags('Synthesize')
 @Controller('synthesize')
@@ -10,10 +10,10 @@ export class SynthesizeController {
 
   @Post()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Save raw text for a topic' })
-  @ApiResponse({ status: 200, description: 'Raw text saved successfully' })
+  @ApiOperation({ summary: 'Process free-form notes with AI' })
+  @ApiResponse({ status: 200, description: 'Notes processed and saved' })
   @ApiResponse({ status: 400, description: 'Validation failed' })
-  async create(@Body() dto: CreateRawTextDto): Promise<void> {
-    await this.synthesizeService.saveRawText(dto.text, dto.topicId);
+  async process(@Body() dto: SynthesizeDto): Promise<SynthesizeResult> {
+    return this.synthesizeService.process(dto.text);
   }
 }

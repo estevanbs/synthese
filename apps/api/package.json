@@ -87,6 +87,7 @@
     "@nestjs/core": "^11.1.16",
     "@nestjs/platform-express": "^11.1.16",
     "@prisma/client": "^7.4.2",
+    "@synthese/ai": "workspace:*",
     "@synthese/database": "workspace:*",
     "@synthese/domain": "workspace:*",
     "class-transformer": "^0.5.1",

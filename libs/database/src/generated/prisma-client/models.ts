@@ -10,4 +10,5 @@
  */
 export type * from './models/Topic.js'
 export type * from './models/RawText.js'
+export type * from './models/Note.js'
 export type * from './commonInputTypes.js'

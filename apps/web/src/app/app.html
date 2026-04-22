@@ -1,2 +1,16 @@
-<app-nx-welcome></app-nx-welcome>
-<router-outlet></router-outlet>
+<div class="app-layout">
+  <app-sidebar
+    [topics]="topics()"
+    [selectedTopicId]="selectedTopic()?.id ?? null"
+    (topicSelected)="selectTopic($event)"
+    (newNoteRequested)="openEditor()"
+  />
+
+  <main class="main-content">
+    @if (showEditor()) {
+      <app-editor (notesSaved)="onNotesSaved($event)" />
+    } @else if (selectedTopic(); as topic) {
+      <app-topic-view [topic]="topic" />
+    }
+  </main>
+</div>

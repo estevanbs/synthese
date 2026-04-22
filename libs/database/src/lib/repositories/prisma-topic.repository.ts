@@ -15,6 +15,14 @@ export class PrismaTopicRepository implements TopicRepository {
   }
 
   async findAll(): Promise<Topic[]> {
-    return this.prisma.topic.findMany();
+    return this.prisma.topic.findMany({ orderBy: { name: 'asc' } });
+  }
+
+  async findOrCreate(name: string): Promise<Topic> {
+    return this.prisma.topic.upsert({
+      where: { name },
+      create: { name },
+      update: {},
+    });
   }
 }

@@ -1,24 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SynthesizeController } from './synthesize.controller';
 import { SynthesizeService } from './synthesize.service';
-import { RAW_TEXT_REPOSITORY } from '@synthese/domain';
 
 describe('SynthesizeController', () => {
   let controller: SynthesizeController;
 
-  const mockRawTextRepository = {
-    create: jest.fn(),
+  const mockSynthesizeService = {
+    process: jest.fn(),
   };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [SynthesizeController],
       providers: [
-        SynthesizeService,
-        {
-          provide: RAW_TEXT_REPOSITORY,
-          useValue: mockRawTextRepository,
-        },
+        { provide: SynthesizeService, useValue: mockSynthesizeService },
       ],
     }).compile();
 
@@ -33,23 +28,17 @@ describe('SynthesizeController', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('create', () => {
-    it('should call saveRawText with correct parameters', async () => {
-      mockRawTextRepository.create.mockResolvedValue({
-        id: 1,
-        content: 'my raw text',
-        topicId: 1,
-        createdAt: new Date(),
-      });
+  describe('process', () => {
+    it('should delegate to SynthesizeService and return result', async () => {
+      const result = {
+        entries: [{ topicId: 1, topicName: 'Abracadabra', confirmation: 'Saved' }],
+      };
+      mockSynthesizeService.process.mockResolvedValue(result);
 
-      const dto = { text: 'my raw text', topicId: 1 };
-      const result = await controller.create(dto);
+      const response = await controller.process({ text: 'some notes' });
 
-      expect(result).toBeUndefined();
-      expect(mockRawTextRepository.create).toHaveBeenCalledWith(
-        'my raw text',
-        1,
-      );
+      expect(mockSynthesizeService.process).toHaveBeenCalledWith('some notes');
+      expect(response).toEqual(result);
     });
   });
 });

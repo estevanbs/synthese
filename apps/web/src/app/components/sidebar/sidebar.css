@@ -1,0 +1,100 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  min-width: 240px;
+  height: 100vh;
+  background: #161b22;
+  border-right: 1px solid #30363d;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid #30363d;
+}
+
+.sidebar-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #e1e4e8;
+  letter-spacing: 0.02em;
+}
+
+.new-note-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #30363d;
+  background: transparent;
+  color: #8b949e;
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.new-note-btn:hover {
+  background: #21262d;
+  color: #e1e4e8;
+  border-color: #8b949e;
+}
+
+.topics-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.topic-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: #8b949e;
+  font-size: 13px;
+  text-align: left;
+  transition: all 0.15s;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.topic-item:hover {
+  background: #21262d;
+  color: #e1e4e8;
+}
+
+.topic-item.active {
+  background: #1f6feb22;
+  color: #58a6ff;
+}
+
+.topic-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty-state {
+  padding: 24px 10px;
+  text-align: center;
+  color: #484f58;
+}
+
+.empty-state p {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.empty-hint {
+  font-size: 11px !important;
+  color: #30363d !important;
+}

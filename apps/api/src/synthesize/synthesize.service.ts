@@ -1,15 +1,60 @@
 import { Injectable, Inject } from '@nestjs/common';
-import type { RawTextRepository } from '@synthese/domain';
-import { RAW_TEXT_REPOSITORY } from '@synthese/domain';
+import type {
+  TopicRepository,
+  NoteRepository,
+  AiProcessor,
+  TopicEntry,
+} from '@synthese/domain';
+import {
+  TOPIC_REPOSITORY,
+  NOTE_REPOSITORY,
+  AI_PROCESSOR,
+} from '@synthese/domain';
+
+export interface SynthesizeResult {
+  entries: Array<{
+    topicId: number;
+    topicName: string;
+    confirmation: string;
+  }>;
+}
 
 @Injectable()
 export class SynthesizeService {
   constructor(
-    @Inject(RAW_TEXT_REPOSITORY)
-    private readonly rawTextRepository: RawTextRepository,
+    @Inject(TOPIC_REPOSITORY)
+    private readonly topicRepository: TopicRepository,
+    @Inject(NOTE_REPOSITORY)
+    private readonly noteRepository: NoteRepository,
+    @Inject(AI_PROCESSOR)
+    private readonly aiProcessor: AiProcessor,
   ) {}
 
-  async saveRawText(content: string, topicId: number): Promise<void> {
-    await this.rawTextRepository.create(content, topicId);
+  async process(rawText: string): Promise<SynthesizeResult> {
+    const allTopics = await this.topicRepository.findAll();
+    const existingNotesByTopicName: Record<string, string> = {};
+
+    for (const topic of allTopics) {
+      const latestNote = await this.noteRepository.findLatestByTopicId(topic.id);
+      if (latestNote) {
+        existingNotesByTopicName[topic.name] = latestNote.content;
+      }
+    }
+
+    const aiResult = await this.aiProcessor.process(rawText, existingNotesByTopicName);
+
+    const results: SynthesizeResult['entries'] = [];
+
+    for (const entry of aiResult.entries) {
+      const topic = await this.topicRepository.findOrCreate(entry.topicName);
+      await this.noteRepository.create(entry.summary, topic.id);
+      results.push({
+        topicId: topic.id,
+        topicName: topic.name,
+        confirmation: entry.confirmation,
+      });
+    }
+
+    return { entries: results };
   }
 }

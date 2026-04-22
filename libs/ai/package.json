@@ -1,0 +1,35 @@
+{
+  "name": "@synthese/ai",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "targets": {
+      "build": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "tsc --build tsconfig.lib.json",
+          "cwd": "libs/ai"
+        },
+        "outputs": ["{projectRoot}/dist"]
+      },
+      "test": {
+        "executor": "@nx/jest:jest",
+        "outputs": ["{projectRoot}/test-output/jest/coverage"],
+        "options": {
+          "jestConfig": "libs/ai/jest.config.cts",
+          "passWithNoTests": true
+        }
+      }
+    }
+  },
+  "exports": {
+    ".": {
+      "@synthese/source": "./src/index.ts",
+      "default": "./dist/src/index.js"
+    }
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.54.0",
+    "@synthese/domain": "workspace:*"
+  }
+}

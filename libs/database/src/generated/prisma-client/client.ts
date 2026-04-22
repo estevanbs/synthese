@@ -51,3 +51,8 @@ export type Topic = Prisma.TopicModel
  * 
  */
 export type RawText = Prisma.RawTextModel
+/**
+ * Model Note
+ * 
+ */
+export type Note = Prisma.NoteModel

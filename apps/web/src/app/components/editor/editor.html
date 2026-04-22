@@ -1,0 +1,48 @@
+<div class="editor-container">
+  <div class="editor-area">
+    <textarea
+      class="editor-textarea"
+      [(ngModel)]="text"
+      (keydown)="onKeydown($event)"
+      placeholder="Write your notes here...&#10;&#10;Example: Chapter 3 of book Abracadabra. The monster killed the girl and now the police is looking for her.&#10;&#10;Press Ctrl+Enter to save"
+      [disabled]="submitting()"
+    ></textarea>
+
+    <div class="editor-footer">
+      <span class="hint">Ctrl+Enter to save</span>
+      <button
+        class="submit-btn"
+        (click)="submit()"
+        [disabled]="!text().trim() || submitting()"
+      >
+        @if (submitting()) {
+          <span class="spinner"></span> Processing...
+        } @else {
+          Save notes
+        }
+      </button>
+    </div>
+  </div>
+
+  @if (result(); as res) {
+    <div class="result-panel">
+      <div class="result-header">
+        <span class="result-title">Saved</span>
+        <button class="dismiss-btn" (click)="dismiss()">×</button>
+      </div>
+      @for (entry of res.entries; track entry.topicId) {
+        <div class="result-entry">
+          <span class="topic-badge">{{ entry.topicName }}</span>
+          <span class="result-confirmation">{{ entry.confirmation }}</span>
+        </div>
+      }
+    </div>
+  }
+
+  @if (error(); as err) {
+    <div class="error-panel">
+      <span>{{ err }}</span>
+      <button class="dismiss-btn" (click)="dismiss()">×</button>
+    </div>
+  }
+</div>

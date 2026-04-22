@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm add *)",
+      "Bash(pnpm prisma *)",
+      "Bash(pnpm install *)",
+      "Bash(pnpm nx *)",
+      "Bash(pnpm jest *)",
+      "Bash(curl -s http://localhost:3000/api)",
+      "Bash(curl -s -X POST http://localhost:3000/api/synthesize -H 'Content-Type: application/json' -d '{\"text\": \"Chapter 3 of book Abracadabra. In this chapter, the monster killed the girl, and now the girl is being searched by the police.\"}')",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s http://localhost:3000/api/topics)",
+      "Bash(curl -s http://localhost:3000/api/notes/topic/7)",
+      "Bash(curl -s http://localhost:4200)",
+      "Bash(curl *)"
+    ]
+  }
+}

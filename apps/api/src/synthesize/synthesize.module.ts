@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { SynthesizeService } from './synthesize.service';
-import { SynthesizeController } from './synthesize.controller';
+import { SynthesizeService } from './synthesize.service.js';
+import { SynthesizeController } from './synthesize.controller.js';
 
 @Module({
   controllers: [SynthesizeController],

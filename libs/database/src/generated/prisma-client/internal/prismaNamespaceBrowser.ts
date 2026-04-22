@@ -52,7 +52,8 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Topic: 'Topic',
-  RawText: 'RawText'
+  RawText: 'RawText',
+  Note: 'Note'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -89,6 +90,16 @@ export const RawTextScalarFieldEnum = {
 } as const
 
 export type RawTextScalarFieldEnum = (typeof RawTextScalarFieldEnum)[keyof typeof RawTextScalarFieldEnum]
+
+
+export const NoteScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  topicId: 'topicId',
+  createdAt: 'createdAt'
+} as const
+
+export type NoteScalarFieldEnum = (typeof NoteScalarFieldEnum)[keyof typeof NoteScalarFieldEnum]
 
 
 export const SortOrder = {

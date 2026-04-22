@@ -1,0 +1,25 @@
+<div class="sidebar">
+  <div class="sidebar-header">
+    <span class="sidebar-title">Synthese</span>
+    <button class="new-note-btn" (click)="requestNewNote()" title="New note">+</button>
+  </div>
+
+  <div class="topics-list">
+    @if (topics().length === 0) {
+      <div class="empty-state">
+        <p>No topics yet</p>
+        <p class="empty-hint">Start writing to create your first topic</p>
+      </div>
+    }
+
+    @for (topic of topics(); track topic.id) {
+      <button
+        class="topic-item"
+        [class.active]="isSelected()(topic.id)"
+        (click)="selectTopic(topic)"
+      >
+        <span class="topic-name">{{ topic.name }}</span>
+      </button>
+    }
+  </div>
+</div>

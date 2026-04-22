@@ -209,6 +209,7 @@ export type TopicWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
   rawTexts?: Prisma.RawTextListRelationFilter
+  notes?: Prisma.NoteListRelationFilter
 }
 
 export type TopicOrderByWithRelationInput = {
@@ -217,18 +218,20 @@ export type TopicOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   rawTexts?: Prisma.RawTextOrderByRelationAggregateInput
+  notes?: Prisma.NoteOrderByRelationAggregateInput
 }
 
 export type TopicWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  name?: string
   AND?: Prisma.TopicWhereInput | Prisma.TopicWhereInput[]
   OR?: Prisma.TopicWhereInput[]
   NOT?: Prisma.TopicWhereInput | Prisma.TopicWhereInput[]
-  name?: Prisma.StringFilter<"Topic"> | string
   createdAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
   rawTexts?: Prisma.RawTextListRelationFilter
-}, "id">
+  notes?: Prisma.NoteListRelationFilter
+}, "id" | "name">
 
 export type TopicOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -257,6 +260,7 @@ export type TopicCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   rawTexts?: Prisma.RawTextCreateNestedManyWithoutTopicInput
+  notes?: Prisma.NoteCreateNestedManyWithoutTopicInput
 }
 
 export type TopicUncheckedCreateInput = {
@@ -265,6 +269,7 @@ export type TopicUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   rawTexts?: Prisma.RawTextUncheckedCreateNestedManyWithoutTopicInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutTopicInput
 }
 
 export type TopicUpdateInput = {
@@ -272,6 +277,7 @@ export type TopicUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rawTexts?: Prisma.RawTextUpdateManyWithoutTopicNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicUncheckedUpdateInput = {
@@ -280,6 +286,7 @@ export type TopicUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rawTexts?: Prisma.RawTextUncheckedUpdateManyWithoutTopicNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicCreateManyInput = {
@@ -366,10 +373,25 @@ export type TopicUpdateOneRequiredWithoutRawTextsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TopicUpdateToOneWithWhereWithoutRawTextsInput, Prisma.TopicUpdateWithoutRawTextsInput>, Prisma.TopicUncheckedUpdateWithoutRawTextsInput>
 }
 
+export type TopicCreateNestedOneWithoutNotesInput = {
+  create?: Prisma.XOR<Prisma.TopicCreateWithoutNotesInput, Prisma.TopicUncheckedCreateWithoutNotesInput>
+  connectOrCreate?: Prisma.TopicCreateOrConnectWithoutNotesInput
+  connect?: Prisma.TopicWhereUniqueInput
+}
+
+export type TopicUpdateOneRequiredWithoutNotesNestedInput = {
+  create?: Prisma.XOR<Prisma.TopicCreateWithoutNotesInput, Prisma.TopicUncheckedCreateWithoutNotesInput>
+  connectOrCreate?: Prisma.TopicCreateOrConnectWithoutNotesInput
+  upsert?: Prisma.TopicUpsertWithoutNotesInput
+  connect?: Prisma.TopicWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TopicUpdateToOneWithWhereWithoutNotesInput, Prisma.TopicUpdateWithoutNotesInput>, Prisma.TopicUncheckedUpdateWithoutNotesInput>
+}
+
 export type TopicCreateWithoutRawTextsInput = {
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  notes?: Prisma.NoteCreateNestedManyWithoutTopicInput
 }
 
 export type TopicUncheckedCreateWithoutRawTextsInput = {
@@ -377,6 +399,7 @@ export type TopicUncheckedCreateWithoutRawTextsInput = {
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutTopicInput
 }
 
 export type TopicCreateOrConnectWithoutRawTextsInput = {
@@ -399,6 +422,7 @@ export type TopicUpdateWithoutRawTextsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notes?: Prisma.NoteUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicUncheckedUpdateWithoutRawTextsInput = {
@@ -406,6 +430,53 @@ export type TopicUncheckedUpdateWithoutRawTextsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutTopicNestedInput
+}
+
+export type TopicCreateWithoutNotesInput = {
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  rawTexts?: Prisma.RawTextCreateNestedManyWithoutTopicInput
+}
+
+export type TopicUncheckedCreateWithoutNotesInput = {
+  id?: number
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  rawTexts?: Prisma.RawTextUncheckedCreateNestedManyWithoutTopicInput
+}
+
+export type TopicCreateOrConnectWithoutNotesInput = {
+  where: Prisma.TopicWhereUniqueInput
+  create: Prisma.XOR<Prisma.TopicCreateWithoutNotesInput, Prisma.TopicUncheckedCreateWithoutNotesInput>
+}
+
+export type TopicUpsertWithoutNotesInput = {
+  update: Prisma.XOR<Prisma.TopicUpdateWithoutNotesInput, Prisma.TopicUncheckedUpdateWithoutNotesInput>
+  create: Prisma.XOR<Prisma.TopicCreateWithoutNotesInput, Prisma.TopicUncheckedCreateWithoutNotesInput>
+  where?: Prisma.TopicWhereInput
+}
+
+export type TopicUpdateToOneWithWhereWithoutNotesInput = {
+  where?: Prisma.TopicWhereInput
+  data: Prisma.XOR<Prisma.TopicUpdateWithoutNotesInput, Prisma.TopicUncheckedUpdateWithoutNotesInput>
+}
+
+export type TopicUpdateWithoutNotesInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rawTexts?: Prisma.RawTextUpdateManyWithoutTopicNestedInput
+}
+
+export type TopicUncheckedUpdateWithoutNotesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rawTexts?: Prisma.RawTextUncheckedUpdateManyWithoutTopicNestedInput
 }
 
 
@@ -415,10 +486,12 @@ export type TopicUncheckedUpdateWithoutRawTextsInput = {
 
 export type TopicCountOutputType = {
   rawTexts: number
+  notes: number
 }
 
 export type TopicCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   rawTexts?: boolean | TopicCountOutputTypeCountRawTextsArgs
+  notes?: boolean | TopicCountOutputTypeCountNotesArgs
 }
 
 /**
@@ -438,6 +511,13 @@ export type TopicCountOutputTypeCountRawTextsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.RawTextWhereInput
 }
 
+/**
+ * TopicCountOutputType without action
+ */
+export type TopicCountOutputTypeCountNotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NoteWhereInput
+}
+
 
 export type TopicSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -445,6 +525,7 @@ export type TopicSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   createdAt?: boolean
   updatedAt?: boolean
   rawTexts?: boolean | Prisma.Topic$rawTextsArgs<ExtArgs>
+  notes?: boolean | Prisma.Topic$notesArgs<ExtArgs>
   _count?: boolean | Prisma.TopicCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["topic"]>
 
@@ -472,6 +553,7 @@ export type TopicSelectScalar = {
 export type TopicOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["topic"]>
 export type TopicInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   rawTexts?: boolean | Prisma.Topic$rawTextsArgs<ExtArgs>
+  notes?: boolean | Prisma.Topic$notesArgs<ExtArgs>
   _count?: boolean | Prisma.TopicCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TopicIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -481,6 +563,7 @@ export type $TopicPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name: "Topic"
   objects: {
     rawTexts: Prisma.$RawTextPayload<ExtArgs>[]
+    notes: Prisma.$NotePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -882,6 +965,7 @@ readonly fields: TopicFieldRefs;
 export interface Prisma__TopicClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   rawTexts<T extends Prisma.Topic$rawTextsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Topic$rawTextsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RawTextPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notes<T extends Prisma.Topic$notesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Topic$notesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1324,6 +1408,30 @@ export type Topic$rawTextsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.RawTextScalarFieldEnum | Prisma.RawTextScalarFieldEnum[]
+}
+
+/**
+ * Topic.notes
+ */
+export type Topic$notesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Note
+   */
+  select?: Prisma.NoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Note
+   */
+  omit?: Prisma.NoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NoteInclude<ExtArgs> | null
+  where?: Prisma.NoteWhereInput
+  orderBy?: Prisma.NoteOrderByWithRelationInput | Prisma.NoteOrderByWithRelationInput[]
+  cursor?: Prisma.NoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NoteScalarFieldEnum | Prisma.NoteScalarFieldEnum[]
 }
 
 /**

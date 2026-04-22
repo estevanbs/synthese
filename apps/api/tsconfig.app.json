@@ -27,6 +27,9 @@
     },
     {
       "path": "../../libs/database/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/ai/tsconfig.lib.json"
     }
   ]
 }

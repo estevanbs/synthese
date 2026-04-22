@@ -1,0 +1,30 @@
+<div class="topic-view">
+  <div class="topic-header">
+    <h1 class="topic-title">{{ topic().name }}</h1>
+    @if (note(); as n) {
+      <span class="last-updated">Updated {{ n.createdAt | date:'mediumDate' }}</span>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <span>Loading notes...</span>
+    </div>
+  }
+
+  @if (error(); as err) {
+    <div class="empty-note">
+      <p>{{ err }}</p>
+      <p class="empty-hint">Add new notes in the editor to get started.</p>
+    </div>
+  }
+
+  @if (note(); as n) {
+    <div class="note-content">
+      @for (line of formattedContent(); track $index) {
+        <p class="note-line">{{ line }}</p>
+      }
+    </div>
+  }
+</div>
