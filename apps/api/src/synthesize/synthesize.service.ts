@@ -3,7 +3,6 @@ import type {
   TopicRepository,
   NoteRepository,
   AiProcessor,
-  TopicEntry,
 } from '@synthese/domain';
 import {
   TOPIC_REPOSITORY,
