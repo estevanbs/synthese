@@ -4,6 +4,9 @@
     "appsDir": "apps",
     "libsDir": "libs"
   },
+  "sync": {
+    "applyChanges": true
+  },
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "production": [
