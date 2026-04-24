@@ -32,13 +32,13 @@ WORKDIR /app
 
 RUN corepack enable \
  && corepack prepare pnpm@9.8.0 --activate \
- && apk add --no-cache python3 make g++ \
- && npm install -g prisma@7.8.0
+ && apk add --no-cache python3 make g++
 
 ENV NODE_ENV=production \
     PORT=3000 \
     WEB_DIST_PATH=/app/web \
-    DATABASE_URL=file:/app/data/synthese.db
+    DATABASE_URL=file:/app/data/synthese.db \
+    PATH=/app/node_modules/.bin:$PATH
 
 COPY --from=builder /workspace/package.json /workspace/pnpm-lock.yaml /workspace/pnpm-workspace.yaml ./
 COPY --from=builder /workspace/apps/api/package.json ./apps/api/
@@ -51,10 +51,11 @@ RUN pnpm install --frozen-lockfile --prod
 COPY --from=builder /workspace/apps/api/dist ./apps/api/dist
 COPY --from=builder /workspace/dist/apps/web/browser ./web
 COPY --from=builder /workspace/libs/database/prisma ./libs/database/prisma
+COPY --from=builder /workspace/prisma.config.ts ./
 
 RUN mkdir -p /app/data
 VOLUME /app/data
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "prisma migrate deploy --schema=./libs/database/prisma/schema.prisma && node apps/api/dist/main.js"]
+CMD ["sh", "-c", "prisma migrate deploy && node apps/api/dist/main.js"]
