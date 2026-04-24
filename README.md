@@ -60,6 +60,55 @@ Swagger docs are available at `http://localhost:3000/docs`.
 
 ---
 
+## Run with Docker
+
+A single image bundles the API and the Angular SPA — the API serves `/api/*` and the static frontend on the same port.
+
+### Pull and run
+
+```bash
+# Start a Postgres if you don't have one running
+docker-compose up -d
+
+# Run the app (replace <dockerhub-user> with the published image owner)
+docker run --rm -p 3000:3000 \
+  -e ANTHROPIC_API_KEY=sk-... \
+  -e DATABASE_URL="postgresql://postgres:postgres@host.docker.internal:5432/synthese" \
+  <dockerhub-user>/synthese:latest
+```
+
+The container runs `prisma migrate deploy` on startup, then boots the API. The app is then reachable at:
+
+- Frontend: `http://localhost:3000/`
+- API: `http://localhost:3000/api`
+- Swagger: `http://localhost:3000/docs`
+
+> On Linux hosts use `--add-host=host.docker.internal:host-gateway` (or point `DATABASE_URL` at the Postgres container's network address) so the container can reach the host's Postgres.
+
+### Required environment variables
+
+| Variable            | Required | Description                                    |
+| ------------------- | -------- | ---------------------------------------------- |
+| `ANTHROPIC_API_KEY` | yes      | Claude API key used by `libs/ai`.              |
+| `DATABASE_URL`      | yes      | Postgres connection string for Prisma.         |
+| `PORT`              | no       | API port. Defaults to `3000`.                  |
+| `WEB_DIST_PATH`     | no       | Path to the SPA bundle. Preset to `/app/web`.  |
+
+### Build the image locally
+
+```bash
+docker build -t synthese:local .
+```
+
+### CI / Docker Hub
+
+`.github/workflows/docker-publish.yml` builds and pushes the image to Docker Hub on every push to `main` and on `v*` tags. It expects two repository secrets:
+
+- `DOCKERHUB_USERNAME`
+- `DOCKERHUB_TOKEN` — a Docker Hub access token with write scope on the `synthese` repo.
+
+---
+
 ## Project structure
 
 ```
