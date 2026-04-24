@@ -102,7 +102,7 @@ docker build -t synthese:local .
 
 ### CI / Docker Hub
 
-`.github/workflows/docker-publish.yml` builds and pushes the image to Docker Hub on every push to `main` and on `v*` tags. It expects two repository secrets:
+`.github/workflows/docker-publish.yml` builds and pushes the image to Docker Hub whenever a GitHub release is published. The image is tagged with the release's semver (`1.2.3`, `1.2`, `1`) and `latest` for non-prerelease versions. It expects two repository secrets:
 
 - `DOCKERHUB_USERNAME`
 - `DOCKERHUB_TOKEN` — a Docker Hub access token with write scope on the `synthese` repo.
