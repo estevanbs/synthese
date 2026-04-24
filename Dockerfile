@@ -20,7 +20,7 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-RUN pnpm prisma generate \
+RUN DATABASE_URL=file:/tmp/build.db pnpm prisma generate \
  && pnpm nx build api \
  && pnpm nx build web --configuration=production
 
