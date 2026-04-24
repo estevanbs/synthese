@@ -67,7 +67,7 @@ A single image bundles the API, the Angular SPA, and a SQLite database — the A
 docker run --rm -p 3000:3000 \
   -e ANTHROPIC_API_KEY=sk-... \
   -v synthese-data:/app/data \
-  <dockerhub-user>/synthese:latest
+  estevanbs/synthese:latest
 ```
 
 The container runs `prisma migrate deploy` on startup, creating the SQLite file inside the volume on first boot, then launches the API. The app is reachable at:
@@ -82,7 +82,7 @@ To use a host directory instead of a named volume:
 docker run --rm -p 3000:3000 \
   -e ANTHROPIC_API_KEY=sk-... \
   -v "$(pwd)/synthese-data:/app/data" \
-  <dockerhub-user>/synthese:latest
+  estevanbs/synthese:latest
 ```
 
 ### Required environment variables
@@ -102,10 +102,9 @@ docker build -t synthese:local .
 
 ### CI / Docker Hub
 
-`.github/workflows/docker-publish.yml` builds and pushes the image to Docker Hub whenever a GitHub release is published. The image is tagged with the release's semver (`1.2.3`, `1.2`, `1`) and `latest` for non-prerelease versions. It expects two repository secrets:
+`.github/workflows/docker-publish.yml` builds and pushes `estevanbs/synthese` to Docker Hub whenever a GitHub release is published. The image is tagged with the release's semver (`1.2.3`, `1.2`, `1`) and `latest` for non-prerelease versions. It expects one repository secret:
 
-- `DOCKERHUB_USERNAME`
-- `DOCKERHUB_TOKEN` — a Docker Hub access token with write scope on the `synthese` repo.
+- `DOCKERHUB_TOKEN` — a Docker Hub access token with write scope on the `estevanbs/synthese` repo.
 
 ---
 
