@@ -17,10 +17,10 @@ import type * as Prisma from "./prismaNamespace.js"
 
 const config: runtime.GetPrismaClientConfig = {
   "previewFeatures": [],
-  "clientVersion": "7.4.2",
-  "engineVersion": "94a226be1cf2967af2541cca5529f0f7ba866919",
-  "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma-client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Topic {\n  id        Int       @id @default(autoincrement())\n  name      String    @unique\n  createdAt DateTime  @default(now()) @map(\"created_at\")\n  updatedAt DateTime  @updatedAt @map(\"updated_at\")\n  rawTexts  RawText[]\n  notes     Note[]\n\n  @@map(\"topics\")\n}\n\nmodel RawText {\n  id        Int      @id @default(autoincrement())\n  content   String\n  topicId   Int      @map(\"topic_id\")\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  topic     Topic    @relation(fields: [topicId], references: [id])\n\n  @@map(\"raw_texts\")\n}\n\nmodel Note {\n  id        Int      @id @default(autoincrement())\n  content   String\n  topicId   Int      @map(\"topic_id\")\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  topic     Topic    @relation(fields: [topicId], references: [id])\n\n  @@map(\"notes\")\n}\n",
+  "clientVersion": "7.8.0",
+  "engineVersion": "3c6e192761c0362d496ed980de936e2f3cebcd3a",
+  "activeProvider": "sqlite",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma-client\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n}\n\nmodel Topic {\n  id        Int       @id @default(autoincrement())\n  name      String    @unique\n  createdAt DateTime  @default(now()) @map(\"created_at\")\n  updatedAt DateTime  @updatedAt @map(\"updated_at\")\n  rawTexts  RawText[]\n  notes     Note[]\n\n  @@map(\"topics\")\n}\n\nmodel RawText {\n  id        Int      @id @default(autoincrement())\n  content   String\n  topicId   Int      @map(\"topic_id\")\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  topic     Topic    @relation(fields: [topicId], references: [id])\n\n  @@map(\"raw_texts\")\n}\n\nmodel Note {\n  id        Int      @id @default(autoincrement())\n  content   String\n  topicId   Int      @map(\"topic_id\")\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  topic     Topic    @relation(fields: [topicId], references: [id])\n\n  @@map(\"notes\")\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -45,10 +45,10 @@ async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Modul
 }
 
 config.compilerWasm = {
-  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.mjs"),
+  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_fast_bg.sqlite.mjs"),
 
   getQueryCompilerWasmModule: async () => {
-    const { wasm } = await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.wasm-base64.mjs")
+    const { wasm } = await import("@prisma/client/runtime/query_compiler_fast_bg.sqlite.wasm-base64.mjs")
     return await decodeBase64AsWasm(wasm)
   },
 
@@ -180,7 +180,7 @@ export interface PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/orm/prisma-client/queries/transactions).
    */
-  $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): runtime.Types.Utils.JsPromise<runtime.Types.Utils.UnwrapTuple<P>>
+  $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P], options?: { maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel }): runtime.Types.Utils.JsPromise<runtime.Types.Utils.UnwrapTuple<P>>
 
   $transaction<R>(fn: (prisma: Omit<PrismaClient, runtime.ITXClientDenyList>) => runtime.Types.Utils.JsPromise<R>, options?: { maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel }): runtime.Types.Utils.JsPromise<R>
 

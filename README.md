@@ -19,11 +19,11 @@ Notes are always written in the language you use. Write in Portuguese, get Portu
 
 **Frontend:** Angular 21, TypeScript 5.9, Playwright (E2E)
 
-**Backend:** NestJS 11, TypeScript 5.9, Prisma 7 (PostgreSQL)
+**Backend:** NestJS 11, TypeScript 5.9, Prisma 7 (SQLite via better-sqlite3)
 
 **AI:** Anthropic Claude via `@anthropic-ai/sdk`
 
-**Tooling:** Nx 22 monorepo, pnpm, Jest 30, ESLint 9, Docker Compose
+**Tooling:** Nx 22 monorepo, pnpm, Jest 30, ESLint 9
 
 ---
 
@@ -33,7 +33,6 @@ Notes are always written in the language you use. Write in Portuguese, get Portu
 
 - Node.js 20+
 - pnpm
-- Docker (for PostgreSQL)
 - An Anthropic API key
 
 ### Setup
@@ -42,10 +41,8 @@ Notes are always written in the language you use. Write in Portuguese, get Portu
 # Install dependencies
 pnpm install
 
-# Start PostgreSQL
-docker-compose up -d
-
-# Run database migrations
+# Create the SQLite database and run migrations
+export DATABASE_URL="file:./dev.db"
 pnpm prisma migrate dev
 
 # Set your API key
@@ -62,37 +59,40 @@ Swagger docs are available at `http://localhost:3000/docs`.
 
 ## Run with Docker
 
-A single image bundles the API and the Angular SPA — the API serves `/api/*` and the static frontend on the same port.
+A single image bundles the API, the Angular SPA, and a SQLite database — the API serves `/api/*` and the static frontend on the same port. The database lives in `/app/data` inside the container; mount a host volume there to keep your notes between runs.
 
 ### Pull and run
 
 ```bash
-# Start a Postgres if you don't have one running
-docker-compose up -d
-
-# Run the app (replace <dockerhub-user> with the published image owner)
 docker run --rm -p 3000:3000 \
   -e ANTHROPIC_API_KEY=sk-... \
-  -e DATABASE_URL="postgresql://postgres:postgres@host.docker.internal:5432/synthese" \
+  -v synthese-data:/app/data \
   <dockerhub-user>/synthese:latest
 ```
 
-The container runs `prisma migrate deploy` on startup, then boots the API. The app is then reachable at:
+The container runs `prisma migrate deploy` on startup, creating the SQLite file inside the volume on first boot, then launches the API. The app is reachable at:
 
 - Frontend: `http://localhost:3000/`
 - API: `http://localhost:3000/api`
 - Swagger: `http://localhost:3000/docs`
 
-> On Linux hosts use `--add-host=host.docker.internal:host-gateway` (or point `DATABASE_URL` at the Postgres container's network address) so the container can reach the host's Postgres.
+To use a host directory instead of a named volume:
+
+```bash
+docker run --rm -p 3000:3000 \
+  -e ANTHROPIC_API_KEY=sk-... \
+  -v "$(pwd)/synthese-data:/app/data" \
+  <dockerhub-user>/synthese:latest
+```
 
 ### Required environment variables
 
-| Variable            | Required | Description                                    |
-| ------------------- | -------- | ---------------------------------------------- |
-| `ANTHROPIC_API_KEY` | yes      | Claude API key used by `libs/ai`.              |
-| `DATABASE_URL`      | yes      | Postgres connection string for Prisma.         |
-| `PORT`              | no       | API port. Defaults to `3000`.                  |
-| `WEB_DIST_PATH`     | no       | Path to the SPA bundle. Preset to `/app/web`.  |
+| Variable            | Required | Description                                                                  |
+| ------------------- | -------- | ---------------------------------------------------------------------------- |
+| `ANTHROPIC_API_KEY` | yes      | Claude API key used by `libs/ai`.                                            |
+| `DATABASE_URL`      | no       | Prisma URL. Defaults to `file:/app/data/synthese.db` inside the container.   |
+| `PORT`              | no       | API port. Defaults to `3000`.                                                |
+| `WEB_DIST_PATH`     | no       | Path to the SPA bundle. Preset to `/app/web`.                                |
 
 ### Build the image locally
 
@@ -138,7 +138,7 @@ pnpm nx test ai
 # Single test file
 pnpm nx test api --testFile=src/synthesize/synthesize.service.spec.ts
 
-# E2E tests (requires running API + Postgres + ANTHROPIC_API_KEY for synthesize tests)
+# E2E tests (requires running API + DATABASE_URL + ANTHROPIC_API_KEY for synthesize tests)
 pnpm nx e2e api-e2e
 
 # Lint / type-check / format

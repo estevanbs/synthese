@@ -189,7 +189,7 @@ export type RawTextGroupByOutputType = {
   _max: RawTextMaxAggregateOutputType | null
 }
 
-type GetRawTextGroupByPayload<T extends RawTextGroupByArgs> = Prisma.PrismaPromise<
+export type GetRawTextGroupByPayload<T extends RawTextGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<RawTextGroupByOutputType, T['by']> &
       {
@@ -402,7 +402,6 @@ export type RawTextCreateOrConnectWithoutTopicInput = {
 
 export type RawTextCreateManyTopicInputEnvelope = {
   data: Prisma.RawTextCreateManyTopicInput | Prisma.RawTextCreateManyTopicInput[]
-  skipDuplicates?: boolean
 }
 
 export type RawTextUpsertWithWhereUniqueWithoutTopicInput = {
@@ -1132,6 +1131,11 @@ export type RawTextFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Skip the first `n` RawTexts.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of RawTexts.
+   */
   distinct?: Prisma.RawTextScalarFieldEnum | Prisma.RawTextScalarFieldEnum[]
 }
 
@@ -1165,7 +1169,6 @@ export type RawTextCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * The data used to create many RawTexts.
    */
   data: Prisma.RawTextCreateManyInput | Prisma.RawTextCreateManyInput[]
-  skipDuplicates?: boolean
 }
 
 /**
@@ -1184,7 +1187,6 @@ export type RawTextCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many RawTexts.
    */
   data: Prisma.RawTextCreateManyInput | Prisma.RawTextCreateManyInput[]
-  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

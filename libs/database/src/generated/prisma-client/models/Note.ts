@@ -189,7 +189,7 @@ export type NoteGroupByOutputType = {
   _max: NoteMaxAggregateOutputType | null
 }
 
-type GetNoteGroupByPayload<T extends NoteGroupByArgs> = Prisma.PrismaPromise<
+export type GetNoteGroupByPayload<T extends NoteGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<NoteGroupByOutputType, T['by']> &
       {
@@ -402,7 +402,6 @@ export type NoteCreateOrConnectWithoutTopicInput = {
 
 export type NoteCreateManyTopicInputEnvelope = {
   data: Prisma.NoteCreateManyTopicInput | Prisma.NoteCreateManyTopicInput[]
-  skipDuplicates?: boolean
 }
 
 export type NoteUpsertWithWhereUniqueWithoutTopicInput = {
@@ -1132,6 +1131,11 @@ export type NoteFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Skip the first `n` Notes.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Notes.
+   */
   distinct?: Prisma.NoteScalarFieldEnum | Prisma.NoteScalarFieldEnum[]
 }
 
@@ -1165,7 +1169,6 @@ export type NoteCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * The data used to create many Notes.
    */
   data: Prisma.NoteCreateManyInput | Prisma.NoteCreateManyInput[]
-  skipDuplicates?: boolean
 }
 
 /**
@@ -1184,7 +1187,6 @@ export type NoteCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many Notes.
    */
   data: Prisma.NoteCreateManyInput | Prisma.NoteCreateManyInput[]
-  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

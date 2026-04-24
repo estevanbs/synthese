@@ -8,11 +8,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # Install dependencies
 pnpm install
 
-# Start infrastructure (Postgres required for API)
-docker-compose up -d
-
-# Run database migrations
-pnpm prisma migrate dev --name <migration-name>
+# Run database migrations (creates the SQLite file at ./dev.db)
+DATABASE_URL="file:./dev.db" pnpm prisma migrate dev --name <migration-name>
 
 # Regenerate Prisma client after schema changes
 pnpm prisma generate
@@ -28,7 +25,7 @@ pnpm nx test ai          # run tests for the AI lib
 # Run a single test file
 pnpm nx test api --testFile=src/synthesize/synthesize.service.spec.ts
 
-# E2E tests (requires running API + Postgres)
+# E2E tests (requires running API + DATABASE_URL)
 pnpm nx e2e api-e2e
 
 # Lint / type-check / format
@@ -132,7 +129,7 @@ Angular 21 SPA. Services in `app/services/` call the API via `HttpClient`.
 - Every new function gets a test. Bug fixes get a regression test.
 - Unit tests mock domain interfaces via DI tokens, not concrete classes. Use named fake classes, not inline stubs.
 - Tests must be F.I.R.S.T: fast, independent, repeatable, self-validating, timely.
-- E2E tests in `apps/api-e2e/` run against a live API; Postgres must be running.
+- E2E tests in `apps/api-e2e/` run against a live API; `DATABASE_URL` must point at a SQLite file the API can write to.
 - The `POST /api/synthesize` e2e test requires `ANTHROPIC_API_KEY`.
 
 ### Logging

@@ -5,7 +5,10 @@ FROM node:24.15.0-alpine AS builder
 
 WORKDIR /workspace
 
-RUN corepack enable && corepack prepare pnpm@9.8.0 --activate
+# better-sqlite3 ships native bindings; alpine needs a toolchain to compile them.
+RUN corepack enable \
+ && corepack prepare pnpm@9.8.0 --activate \
+ && apk add --no-cache python3 make g++
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/api/package.json ./apps/api/
@@ -29,12 +32,13 @@ WORKDIR /app
 
 RUN corepack enable \
  && corepack prepare pnpm@9.8.0 --activate \
- && apk add --no-cache openssl \
- && npm install -g prisma@7.4.2
+ && apk add --no-cache python3 make g++ \
+ && npm install -g prisma@7.8.0
 
 ENV NODE_ENV=production \
     PORT=3000 \
-    WEB_DIST_PATH=/app/web
+    WEB_DIST_PATH=/app/web \
+    DATABASE_URL=file:/app/data/synthese.db
 
 COPY --from=builder /workspace/package.json /workspace/pnpm-lock.yaml /workspace/pnpm-workspace.yaml ./
 COPY --from=builder /workspace/apps/api/package.json ./apps/api/
@@ -47,6 +51,9 @@ RUN pnpm install --frozen-lockfile --prod
 COPY --from=builder /workspace/apps/api/dist ./apps/api/dist
 COPY --from=builder /workspace/dist/apps/web/browser ./web
 COPY --from=builder /workspace/libs/database/prisma ./libs/database/prisma
+
+RUN mkdir -p /app/data
+VOLUME /app/data
 
 EXPOSE 3000
 
