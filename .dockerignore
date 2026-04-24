@@ -14,7 +14,5 @@
 **/test-output
 **/coverage
 **/*.log
-apps/web-e2e
-apps/api-e2e
 Dockerfile
 .dockerignore
