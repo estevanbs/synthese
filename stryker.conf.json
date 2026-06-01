@@ -1,0 +1,44 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "packageManager": "pnpm",
+  "plugins": [
+    "@stryker-mutator/typescript-checker"
+  ],
+  "testRunner": "command",
+  "commandRunner": {
+    "command": "pnpm exec jest --config jest.stryker.config.cjs --runInBand"
+  },
+  "coverageAnalysis": "off",
+  "checkers": ["typescript"],
+  "tsconfigFile": "tsconfig.json",
+  "mutate": [
+    "apps/api/src/**/*.ts",
+    "libs/ai/src/**/*.ts",
+    "!apps/api/src/**/*.spec.ts",
+    "!libs/ai/src/**/*.spec.ts",
+    "!apps/api/src/**/dto/**/*.ts",
+    "!libs/ai/src/index.ts",
+    "!libs/ai/src/lib/ai.module.ts"
+  ],
+  "ignorePatterns": [
+    "/dist",
+    "/coverage",
+    "/test-output",
+    "/apps/**/dist",
+    "/apps/**/out-tsc",
+    "/libs/**/dist",
+    "/libs/**/out-tsc",
+    "/apps/web",
+    "/apps/web-e2e",
+    "/apps/api-e2e"
+  ],
+  "reporters": ["clear-text", "progress", "html"],
+  "htmlReporter": {
+    "fileName": "reports/mutation/html/index.html"
+  },
+  "thresholds": {
+    "high": 0,
+    "low": 0,
+    "break": 0
+  }
+}

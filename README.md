@@ -156,6 +156,10 @@ pnpm nx test api --testFile=src/synthesize/synthesize.service.spec.ts
 # E2E tests (requires running API + DATABASE_URL + configured LLM variables for synthesize tests)
 pnpm nx e2e api-e2e
 
+# Mutation testing
+pnpm run mutation:dry-run # Verifies Stryker and Jest wiring without running mutants
+pnpm run mutation         # Runs the full Stryker mutation test suite
+
 # Lint / type-check / format
 pnpm nx lint api
 pnpm nx typecheck api
@@ -165,6 +169,8 @@ pnpm nx format:write
 pnpm nx build api
 pnpm nx build web
 ```
+
+Mutation test reports are written to `reports/mutation/html/index.html`.
 
 ---
 

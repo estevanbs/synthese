@@ -42,6 +42,8 @@ Thumbs.db
 .nx/workspace-data
 
 test-output
+reports
+.stryker-tmp
 
 .angular
 
