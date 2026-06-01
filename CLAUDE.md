@@ -47,7 +47,7 @@ Clean architecture Nx monorepo. Dependency direction is strict — outer layers 
 │  apps/api   (application layer) │  NestJS controllers, services, DTOs
 │  apps/web   (presentation)      │  Angular SPA
 ├─────────────────────────────────┤
-│  libs/ai        (infrastructure)│  Claude AI implementation
+│  libs/ai        (infrastructure)│  Claude and Ollama AI implementations
 │  libs/database  (infrastructure)│  Prisma repository implementations
 ├─────────────────────────────────┤
 │  libs/domain    (domain layer)  │  interfaces, entities, DI tokens — no framework imports
@@ -71,9 +71,13 @@ Infrastructure — Prisma implementations of domain repository interfaces.
 - Prisma schema: `libs/database/prisma/schema.prisma`; generated client: `libs/database/src/generated/prisma-client/` (committed)
 
 ### libs/ai
-Infrastructure — Claude AI implementation of `AiProcessor`.
-- `ClaudeAiProcessorService` calls the Anthropic SDK; requires `ANTHROPIC_API_KEY` env var
-- `AiModule` is `@Global()`, registers and exports `AI_PROCESSOR`
+Infrastructure — Pluggable AI implementations of `AiProcessor` (e.g., Claude, Ollama).
+- Providers implement `AiProcessor` and are registered in `AiModule`.
+- `AiModule` is `@Global()`, reads `LLM_PROVIDER` env to pick the active processor, and exports `AI_PROCESSOR`.
+
+**Supported Providers:**
+- **Claude** (`LLM_PROVIDER=claude`): Requires `ANTHROPIC_API_KEY`
+- **Ollama** (`LLM_PROVIDER=ollama`): Requires `OLLAMA_MODEL`
 
 ### apps/api
 Application layer (NestJS). Strict layering within this app:
@@ -120,6 +124,11 @@ Angular 21 SPA. Services in `app/services/` call the API via `HttpClient`.
 8. Create `apps/api/src/<feature>/<feature>.service.ts`, `<feature>.controller.ts`, `<feature>.module.ts`
 9. Import the feature module in `AppModule`
 
+### Adding a new LLM provider
+1. Create a new service implementing `AiProcessor` in `libs/ai/src/lib/<provider>-ai-processor.service.ts`
+2. Update `libs/ai/src/lib/ai.module.ts` to instantiate the new service based on `LLM_PROVIDER`
+3. Add the provider and any new specific environment variables it requires to the "Supported Providers" lists in `README.md` and `CLAUDE.md`
+
 ### Import convention
 - **Source files** (non-spec): local imports **must** use the `.js` extension — `import { Foo } from './foo.js'`
 - **Spec files**: no `.js` extension needed (Jest handles resolution)
@@ -130,7 +139,7 @@ Angular 21 SPA. Services in `app/services/` call the API via `HttpClient`.
 - Unit tests mock domain interfaces via DI tokens, not concrete classes. Use named fake classes, not inline stubs.
 - Tests must be F.I.R.S.T: fast, independent, repeatable, self-validating, timely.
 - E2E tests in `apps/api-e2e/` run against a live API; `DATABASE_URL` must point at a SQLite file the API can write to.
-- The `POST /api/synthesize` e2e test requires `ANTHROPIC_API_KEY`.
+- The `POST /api/synthesize` e2e test requires configured LLM credentials (e.g. `ANTHROPIC_API_KEY` or `LLM_PROVIDER=ollama`).
 
 ### Logging
 - Structured JSON when logging for debugging / observability.

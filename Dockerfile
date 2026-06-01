@@ -38,6 +38,9 @@ ENV NODE_ENV=production \
     PORT=3000 \
     WEB_DIST_PATH=/app/web \
     DATABASE_URL=file:/app/data/synthese.db \
+    LLM_PROVIDER=claude \
+    OLLAMA_MODEL=llama3 \
+    OLLAMA_HOST=http://host.docker.internal:11434 \
     PATH=/app/node_modules/.bin:$PATH
 
 COPY --from=builder /workspace/package.json /workspace/pnpm-lock.yaml /workspace/pnpm-workspace.yaml ./

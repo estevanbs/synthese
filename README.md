@@ -21,7 +21,7 @@ Notes are always written in the language you use. Write in Portuguese, get Portu
 
 **Backend:** NestJS 11, TypeScript 5.9, Prisma 7 (SQLite via better-sqlite3)
 
-**AI:** Anthropic Claude via `@anthropic-ai/sdk`
+**AI:** Pluggable LLM Providers (Claude or Ollama)
 
 **Tooling:** Nx 22 monorepo, pnpm, Jest 30, ESLint 9
 
@@ -33,7 +33,7 @@ Notes are always written in the language you use. Write in Portuguese, get Portu
 
 - Node.js 20+
 - pnpm
-- An Anthropic API key
+- Credentials or local setup for your chosen LLM provider (e.g., Anthropic API key, or a running Ollama instance)
 
 ### Setup
 
@@ -45,8 +45,12 @@ pnpm install
 export DATABASE_URL="file:./dev.db"
 pnpm prisma migrate dev
 
-# Set your API key
-export ANTHROPIC_API_KEY=sk-...
+# Choose your LLM provider
+export LLM_PROVIDER=ollama # Supported: "claude", "ollama"
+
+# Set provider-specific configuration
+export OLLAMA_MODEL=llama3       # Required if LLM_PROVIDER=ollama
+export ANTHROPIC_API_KEY=sk-...  # Required if LLM_PROVIDER=claude
 
 # Start API (port 3000) and web (port 4200) in separate terminals
 pnpm nx serve api
@@ -65,10 +69,13 @@ A single image bundles the API, the Angular SPA, and a SQLite database — the A
 
 ```bash
 docker run --rm -p 3000:3000 \
-  -e ANTHROPIC_API_KEY=sk-... \
+  -e LLM_PROVIDER=ollama \
+  -e OLLAMA_MODEL=llama3 \
+  -e OLLAMA_HOST=host.docker.internal:11434 \
   -v synthese-data:/app/data \
   estevanbs/synthese:latest
 ```
+*Note: If using Claude, set `-e LLM_PROVIDER=claude` and pass `-e ANTHROPIC_API_KEY=sk-...` instead.*
 
 The container runs `prisma migrate deploy` on startup, creating the SQLite file inside the volume on first boot, then launches the API. The app is reachable at:
 
@@ -80,16 +87,25 @@ To use a host directory instead of a named volume:
 
 ```bash
 docker run --rm -p 3000:3000 \
-  -e ANTHROPIC_API_KEY=sk-... \
+  -e LLM_PROVIDER=ollama \
+  -e OLLAMA_MODEL=llama3 \
+  -e OLLAMA_HOST=host.docker.internal:11434 \
   -v "$(pwd)/synthese-data:/app/data" \
   estevanbs/synthese:latest
 ```
 
-### Required environment variables
+### Supported LLM Providers & Variables
+
+| Provider | `LLM_PROVIDER` | Specific Variables Required                                              |
+| -------- | -------------- | ------------------------------------------------------------------------ |
+| Claude   | `claude`       | `ANTHROPIC_API_KEY` (Anthropic API key)                                  |
+| Ollama   | `ollama`       | `OLLAMA_MODEL` (e.g., `llama3`), `OLLAMA_HOST` (optional docker host config) |
+
+### Common Environment Variables
 
 | Variable            | Required | Description                                                                  |
 | ------------------- | -------- | ---------------------------------------------------------------------------- |
-| `ANTHROPIC_API_KEY` | yes      | Claude API key used by `libs/ai`.                                            |
+| `LLM_PROVIDER`      | no       | Selects the AI provider (see table above). Defaults to `claude`.             |
 | `DATABASE_URL`      | no       | Prisma URL. Defaults to `file:/app/data/synthese.db` inside the container.   |
 | `PORT`              | no       | API port. Defaults to `3000`.                                                |
 | `WEB_DIST_PATH`     | no       | Path to the SPA bundle. Preset to `/app/web`.                                |
@@ -120,7 +136,7 @@ synthese/
 └── libs/
     ├── domain/       # Interfaces, entities, DI tokens — no framework deps
     ├── database/     # Prisma repositories + generated client
-    └── ai/           # Claude AI processor implementation
+    └── ai/           # Pluggable AI processor implementations (Claude, Ollama, etc.)
 ```
 
 The dependency flow is strict: `apps/` → `libs/database` | `libs/ai` → `libs/domain`. Nothing in `libs/domain` imports from outer layers.
@@ -137,7 +153,7 @@ pnpm nx test ai
 # Single test file
 pnpm nx test api --testFile=src/synthesize/synthesize.service.spec.ts
 
-# E2E tests (requires running API + DATABASE_URL + ANTHROPIC_API_KEY for synthesize tests)
+# E2E tests (requires running API + DATABASE_URL + configured LLM variables for synthesize tests)
 pnpm nx e2e api-e2e
 
 # Lint / type-check / format

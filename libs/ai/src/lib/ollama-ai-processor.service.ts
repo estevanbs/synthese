@@ -1,25 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import Anthropic from '@anthropic-ai/sdk';
+import { Ollama } from 'ollama';
 import type { AiProcessor, AiProcessResult } from '@synthese/domain';
 import { SYSTEM_PROMPT } from './prompts.js';
 
-interface ClaudeEntry {
+interface OllamaEntry {
   topicName: string;
   topicType: string;
   summary: string;
   confirmation: string;
 }
 
-interface ClaudeResponse {
-  entries: ClaudeEntry[];
+interface OllamaResponse {
+  entries: OllamaEntry[];
 }
 
 @Injectable()
-export class ClaudeAiProcessorService implements AiProcessor {
-  private readonly client: Anthropic;
+export class OllamaAiProcessorService implements AiProcessor {
+  private readonly client: Ollama;
 
   constructor() {
-    this.client = new Anthropic({ apiKey: process.env['ANTHROPIC_API_KEY'] });
+    const host = process.env['OLLAMA_HOST'];
+    this.client = host ? new Ollama({ host }) : new Ollama();
   }
 
   async process(
@@ -34,25 +35,28 @@ export class ClaudeAiProcessorService implements AiProcessor {
         : '';
 
     const userMessage = `User input:\n${rawText}${existingNotesSection}`;
+    const model = process.env['OLLAMA_MODEL'] || 'llama3';
 
-    const message = await this.client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 2048,
-      system: SYSTEM_PROMPT,
-      messages: [{ role: 'user', content: userMessage }],
+    const response = await this.client.chat({
+      model,
+      format: 'json',
+      options: {
+        temperature: 0.2, // Lower temperature to improve json structure and consistency
+      },
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: userMessage },
+      ],
     });
 
-    const text = message.content
-      .filter((block) => block.type === 'text')
-      .map((block) => block.text)
-      .join('');
+    const text = response.message.content;
 
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error('AI response did not contain valid JSON');
     }
 
-    const parsed = JSON.parse(jsonMatch[0]) as ClaudeResponse;
+    const parsed = JSON.parse(jsonMatch[0]) as OllamaResponse;
 
     return {
       entries: parsed.entries.map((e) => ({
