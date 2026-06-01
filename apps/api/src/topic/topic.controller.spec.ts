@@ -9,6 +9,7 @@ describe('TopicController', () => {
     create: jest.fn(),
     findById: jest.fn(),
     findAll: jest.fn(),
+    delete: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -68,6 +69,17 @@ describe('TopicController', () => {
       const result = await controller.findOne(999);
 
       expect(result).toBeNull();
+    });
+  });
+
+  describe('remove', () => {
+    it('should delete a topic by id', async () => {
+      mockTopicService.delete.mockResolvedValue(undefined);
+
+      const result = await controller.remove(1);
+
+      expect(result).toBeUndefined();
+      expect(mockTopicService.delete).toHaveBeenCalledWith(1);
     });
   });
 });

@@ -118,6 +118,66 @@ describe('SynthesizeService', () => {
       });
     });
 
+    it('should only pass topics with existing notes to AI', async () => {
+      const rawText = 'Chapter 5 of Abracadabra.';
+
+      mockTopicRepository.findAll.mockResolvedValue([
+        { id: 1, name: 'Abracadabra' },
+        { id: 2, name: 'Dune' },
+      ]);
+      mockNoteRepository.findLatestByTopicId
+        .mockResolvedValueOnce({
+          id: 1,
+          content: 'Chapter 4 recap.',
+          topicId: 1,
+          createdAt: new Date(),
+        })
+        .mockResolvedValueOnce(null);
+      mockAiProcessor.process.mockResolvedValue({ entries: [] });
+
+      await service.process(rawText);
+
+      expect(mockNoteRepository.findLatestByTopicId).toHaveBeenCalledTimes(2);
+      expect(mockNoteRepository.findLatestByTopicId).toHaveBeenNthCalledWith(1, 1);
+      expect(mockNoteRepository.findLatestByTopicId).toHaveBeenNthCalledWith(2, 2);
+      expect(mockAiProcessor.process).toHaveBeenCalledWith(rawText, {
+        Abracadabra: 'Chapter 4 recap.',
+      });
+    });
+
+    it('should save notes under the persisted topic returned by findOrCreate', async () => {
+      mockTopicRepository.findAll.mockResolvedValue([]);
+      mockAiProcessor.process.mockResolvedValue({
+        entries: [
+          {
+            topicName: 'Book: Abracadabra',
+            summary: 'Chapter 6 summary.',
+            confirmation: 'Saved',
+          },
+        ],
+      });
+      mockTopicRepository.findOrCreate.mockResolvedValue({
+        id: 10,
+        name: 'Abracadabra',
+      });
+      mockNoteRepository.create.mockResolvedValue({
+        id: 20,
+        content: 'Chapter 6 summary.',
+        topicId: 10,
+        createdAt: new Date(),
+      });
+
+      const result = await service.process('Chapter 6 of Abracadabra.');
+
+      expect(mockTopicRepository.findOrCreate).toHaveBeenCalledWith('Book: Abracadabra');
+      expect(mockNoteRepository.create).toHaveBeenCalledWith('Chapter 6 summary.', 10);
+      expect(result.entries[0]).toMatchObject({
+        topicId: 10,
+        topicName: 'Abracadabra',
+        confirmation: 'Saved',
+      });
+    });
+
     it('should handle multiple topics in a single input', async () => {
       const rawText = 'Watched ep 3 of Breaking Bad and read chapter 2 of Dune.';
 
