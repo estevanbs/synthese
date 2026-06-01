@@ -1,8 +1,19 @@
 <div class="topic-view">
   <div class="topic-header">
-    <h1 class="topic-title">{{ topic().name }}</h1>
-    @if (note(); as n) {
-      <span class="last-updated">Updated {{ n.createdAt | date:'mediumDate' }}</span>
+    <div class="topic-header-left">
+      <h1 class="topic-title">{{ topic().name }}</h1>
+      @if (note(); as n) {
+        <span class="last-updated">Updated {{ n.createdAt | date:'mediumDate' }}</span>
+      }
+    </div>
+    @if (note() && !editing()) {
+      <button class="edit-btn" (click)="startEdit()" title="Edit note">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </svg>
+        Edit
+      </button>
     }
   </div>
 
@@ -20,7 +31,39 @@
     </div>
   }
 
-  @if (note(); as n) {
+  @if (editing()) {
+    <div class="edit-area">
+      <textarea
+        class="edit-textarea"
+        [ngModel]="editContent()"
+        (ngModelChange)="editContent.set($event)"
+        (keydown)="onEditKeydown($event)"
+        [disabled]="saving()"
+      ></textarea>
+
+      @if (saveError(); as err) {
+        <div class="save-error">{{ err }}</div>
+      }
+
+      <div class="edit-actions">
+        <span class="edit-hint">Ctrl+Enter to save · Esc to cancel</span>
+        <div class="edit-buttons">
+          <button class="cancel-btn" (click)="cancelEdit()" [disabled]="saving()">Cancel</button>
+          <button
+            class="save-btn"
+            (click)="saveEdit()"
+            [disabled]="!editContent().trim() || saving()"
+          >
+            @if (saving()) {
+              <span class="spinner"></span> Saving...
+            } @else {
+              Save changes
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  } @else if (note(); as n) {
     <div class="note-content">
       @for (line of formattedContent(); track $index) {
         <p class="note-line">{{ line }}</p>

@@ -16,4 +16,13 @@ export class NoteService {
     }
     return note;
   }
+
+  async update(id: number, content: string): Promise<Note> {
+    const existing = await this.noteRepository.findById(id);
+    if (!existing) {
+      throw new NotFoundException(`Note with id ${id} not found`);
+    }
+    return this.noteRepository.update(id, content);
+  }
 }
+

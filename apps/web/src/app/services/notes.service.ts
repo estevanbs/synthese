@@ -17,4 +17,8 @@ export class NotesService {
   getLatestForTopic(topicId: number): Observable<Note> {
     return this.http.get<Note>(`${this.base}/topic/${topicId}`);
   }
+
+  update(id: number, content: string): Observable<Note> {
+    return this.http.patch<Note>(`${this.base}/${id}`, { content });
+  }
 }
